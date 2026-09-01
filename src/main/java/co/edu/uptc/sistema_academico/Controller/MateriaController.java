@@ -1,8 +1,14 @@
 package co.edu.uptc.sistema_academico.Controller;
 
+import co.edu.uptc.sistema_academico.dto.MateriaPageResponse;
 import co.edu.uptc.sistema_academico.entity.Materia;
 import co.edu.uptc.sistema_academico.service.MateriaService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import co.edu.uptc.sistema_academico.dto.MateriaSortField;
+import co.edu.uptc.sistema_academico.dto.SortDirection;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,10 +16,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import java.util.List;
 
 @RestController
-@RequestMapping("/materias")
+@RequestMapping("/api/materias")
 @Tag(
     name = "Materias",
     description = "Operaciones CRUD para la gestión de materias académicas"
@@ -25,21 +30,47 @@ public class MateriaController {
     public MateriaController(MateriaService materiaService) {
         this.materiaService = materiaService;
     }
-
+   
+@GetMapping
 @Operation(
-    summary = "Listar materias",
-    description = "Obtiene todas las materias registradas en el sistema académico."
+        summary = "Consultar materias",
+        description = "Obtiene las materias mediante paginación y ordenamiento."
 )
 @ApiResponses({
-    @ApiResponse(
-        responseCode = "200",
-        description = "Lista de materias obtenida correctamente"
-    )
+        @ApiResponse(
+                responseCode = "200",
+                description = "Consulta realizada correctamente"
+        ),
+        @ApiResponse(
+                responseCode = "400",
+                description = "Parámetros de consulta inválidos"
+        )
 })
-@GetMapping
-public List<Materia> obtenerTodas() {
-    return materiaService.obtenerTodas();
-}
+public MateriaPageResponse obtenerMaterias(
+
+        @RequestParam(defaultValue = "1")
+        @Min(1)
+        int pageNumber,
+
+        @RequestParam(defaultValue = "20")
+        @Min(1)
+        @Max(100)
+        int pageSize,
+
+        @RequestParam
+        MateriaSortField sortBy,
+
+        @RequestParam
+        SortDirection sortDirection) {
+
+    return materiaService.buscarMaterias(
+            pageNumber,
+            pageSize,
+            sortBy,
+            sortDirection
+    );
+    }
+
 
     @Operation(
         summary = "Consultar materia por ID",

@@ -14,7 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 
 @RestController
-@RequestMapping("/inscripciones")
+@RequestMapping("/api/inscripciones")
 @Tag(
     name = "Inscripciones",
     description = "Operaciones CRUD para gestionar la inscripción de estudiantes en materias"

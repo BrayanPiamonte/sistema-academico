@@ -45,6 +45,20 @@ public class EstudianteController {
         this.estudianteService = estudianteService;
     }
 
+ @Operation(
+summary = "Buscar estudiante por ID",
+description = "Obtiene los detalles de un estudiante a partir de su identificador."
+)
+@ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Estudiante encontrado"
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "No existe una inscripción con el ID indicado"
+        )
+    })
 @GetMapping("/{id}")
 public Estudiante obtenerPorId(@PathVariable Long id) {
     return estudianteService.obtenerPorId(id);
